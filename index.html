@@ -19,8 +19,6 @@
       --danger: #ef4444;
       --success: #22c55e;
       --warning: #f59e0b;
-      --query-bg: #0d1117;
-      --query-border: #21262d;
     }
 
     body {
@@ -41,6 +39,7 @@
       align-items: center;
       justify-content: space-between;
       height: 60px;
+      flex-shrink: 0;
     }
     .logo {
       display: flex;
@@ -49,53 +48,50 @@
       font-size: 1.2rem;
       font-weight: 700;
       color: var(--text);
+      user-select: none;
     }
-    .logo svg { color: var(--accent); }
-    .header-badge {
-      background: #7c3aed22;
-      border: 1px solid #7c3aed66;
-      color: #a78bfa;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
+    .logo-icon {
+      color: var(--accent);
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      border-radius: 6px;
+      padding: 3px;
     }
+    .logo-icon:hover { color: var(--accent-hover); }
+    .logo-icon.flash { color: var(--warning); transform: scale(1.2); }
+
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .header-info { font-size: 0.78rem; color: var(--muted); }
 
     /* ── LAYOUT ── */
     main {
       flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
+      display: flex;
+      overflow: hidden;
     }
 
-    /* ── LEFT PANEL — LOGIN ── */
+    /* ── LOGIN PANEL ── */
     .login-panel {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 3rem 4rem;
+      flex: 1;
+      min-width: 0;
+      transition: flex 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    body.panel-open .login-panel {
+      flex: 0 0 420px;
       border-right: 1px solid var(--border);
     }
-    .login-card {
-      width: 100%;
-      max-width: 400px;
-    }
-    .login-card h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-    .login-card p.sub {
-      color: var(--muted);
-      font-size: 0.875rem;
-      margin-bottom: 2rem;
-    }
+    .login-card { width: 100%; max-width: 380px; }
+    .login-card h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .login-card p.sub { color: var(--muted); font-size: 0.875rem; margin-bottom: 2rem; }
+
     label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
@@ -115,8 +111,8 @@
       margin-bottom: 1.1rem;
     }
     input:focus { outline: none; border-color: var(--accent); }
-    input.danger { border-color: var(--danger); }
-    input.success { border-color: var(--success); }
+    input.inp-danger { border-color: var(--danger); }
+    input.inp-success { border-color: var(--success); }
 
     .btn {
       width: 100%;
@@ -142,62 +138,124 @@
       display: none;
     }
     .alert.show { display: flex; align-items: center; gap: 8px; }
-    .alert.error { background: #ef444420; border: 1px solid #ef444466; color: #fca5a5; }
+    .alert.error   { background: #ef444420; border: 1px solid #ef444466; color: #fca5a5; }
     .alert.success { background: #22c55e20; border: 1px solid #22c55e66; color: #86efac; }
     .alert.warning { background: #f59e0b20; border: 1px solid #f59e0b66; color: #fcd34d; }
 
-    /* ── RIGHT PANEL — EDUCATION ── */
+    .forgot { font-size: 0.78rem; color: var(--muted); margin-top: 1.2rem; text-align: center; cursor: pointer; }
+    .forgot:hover { color: var(--accent); }
+
+    /* ── EDU PANEL ── */
     .edu-panel {
+      width: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      background: var(--surface);
       display: flex;
       flex-direction: column;
-      padding: 2rem;
-      overflow-y: auto;
-      max-height: calc(100vh - 60px);
+      flex-shrink: 0;
     }
-    .edu-panel h3 {
+    body.panel-open .edu-panel {
+      width: calc(100vw - 420px);
+      opacity: 1;
+      overflow-y: auto;
+    }
+
+    .edu-inner { padding: 1.75rem 2rem; min-width: 480px; }
+
+    .edu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .edu-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--warning);
+      font-weight: 700;
+    }
+    .close-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 3px 10px;
       font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .close-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+    .edu-panel h3 {
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--muted);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
+    /* Query box */
     .query-box {
-      background: #0d1117;
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 1rem 1.1rem;
       font-family: 'Courier New', monospace;
       font-size: 0.82rem;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-      min-height: 80px;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+      min-height: 76px;
       word-break: break-all;
+      white-space: pre-wrap;
     }
-    .kw { color: #ff7b72; }      /* SELECT, WHERE, AND, OR */
-    .str { color: #a5f3fc; }     /* strings */
-    .inj { color: #fbbf24; background: #fbbf2422; border-radius: 3px; padding: 0 2px; } /* injected part */
-    .cmt { color: #6e7681; font-style: italic; }   /* -- comment */
+    .kw  { color: #ff7b72; }
+    .str { color: #a5f3fc; }
+    .inj { color: #fbbf24; background: #fbbf2418; border-radius: 3px; padding: 0 3px; }
+    .cmt { color: #6e7681; font-style: italic; }
 
+    /* Status */
     .status-row {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 0.8rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       padding: 0.6rem 1rem;
       border-radius: 8px;
       background: var(--surface2);
       border: 1px solid var(--border);
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-    .dot.red { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
-    .dot.green { background: var(--success); box-shadow: 0 0 6px var(--success); }
-    .dot.yellow { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .dot.red    { background: var(--danger);  box-shadow: 0 0 6px var(--danger); }
+    .dot.green  { background: var(--success); box-shadow: 0 0 6px var(--success); }
 
-    /* ── PAYLOADS ── */
-    .payloads { margin-bottom: 1.5rem; }
-    .payloads h3 { margin-bottom: 0.75rem; }
+    /* Explain */
+    .explain {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .explain strong { color: var(--text); }
+    .tag {
+      display: inline-block;
+      background: #7c3aed22;
+      border: 1px solid #7c3aed55;
+      color: #a78bfa;
+      font-size: 0.65rem;
+      padding: 1px 8px;
+      border-radius: 20px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Payloads */
+    .payloads { margin-bottom: 1.25rem; }
     .payload-list { display: flex; flex-direction: column; gap: 6px; }
     .payload-item {
       display: flex;
@@ -210,90 +268,62 @@
       cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
-    .payload-item:hover { border-color: var(--warning); background: #f59e0b0a; }
-    .payload-code {
-      font-family: 'Courier New', monospace;
-      font-size: 0.78rem;
-      color: #fbbf24;
-      flex: 1;
-    }
-    .payload-desc { font-size: 0.72rem; color: var(--muted); }
+    .payload-item:hover { border-color: var(--warning); background: #f59e0b08; }
+    .payload-code  { font-family: 'Courier New', monospace; font-size: 0.78rem; color: #fbbf24; flex: 1; }
+    .payload-desc  { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
     .use-btn {
       font-size: 0.65rem;
       background: transparent;
       border: 1px solid var(--border);
       color: var(--muted);
       border-radius: 4px;
-      padding: 2px 8px;
+      padding: 2px 10px;
       cursor: pointer;
       white-space: nowrap;
     }
     .use-btn:hover { border-color: var(--warning); color: var(--warning); }
 
-    /* ── LEAK TABLE ── */
-    .leak-section { display: none; margin-top: 1rem; }
+    /* Leak table */
+    .leak-section { display: none; margin-top: 0.5rem; }
     .leak-section.show { display: block; }
-    .leak-section h3 { color: var(--danger); margin-bottom: 0.75rem; }
-    .leak-section h3 span { font-size: 0.7rem; background: var(--danger); color: #fff; border-radius: 20px; padding: 1px 8px; margin-left: 8px; font-weight: 400; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.75rem;
+    .leak-section h3 { color: var(--danger); }
+    .leak-section h3 .badge {
+      font-size: 0.65rem;
+      background: var(--danger);
+      color: #fff;
+      border-radius: 20px;
+      padding: 1px 8px;
+      margin-left: 8px;
+      font-weight: 400;
+      vertical-align: middle;
     }
+    table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 0.6rem; }
     th {
-      background: #ef444420;
+      background: #ef444418;
       color: #fca5a5;
       text-align: left;
       padding: 6px 10px;
-      border-bottom: 1px solid #ef444444;
+      border-bottom: 1px solid #ef444440;
       font-weight: 600;
       letter-spacing: 0.04em;
     }
-    td {
-      padding: 6px 10px;
-      border-bottom: 1px solid var(--border);
-      font-family: 'Courier New', monospace;
-      color: var(--text);
-    }
+    td { padding: 6px 10px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; }
     tr:hover td { background: #ef444408; }
-
-    /* ── EXPLANATION ── */
-    .explain {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      font-size: 0.8rem;
-      line-height: 1.6;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
-    .explain strong { color: var(--text); }
-    .explain .tag {
-      display: inline-block;
-      background: #7c3aed22;
-      border: 1px solid #7c3aed55;
-      color: #a78bfa;
-      font-size: 0.65rem;
-      padding: 1px 7px;
-      border-radius: 20px;
-      margin-bottom: 0.5rem;
-    }
 
     /* ── FOOTER ── */
     footer {
       text-align: center;
-      padding: 1rem;
+      padding: 0.85rem;
       font-size: 0.72rem;
       color: var(--muted);
       border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
-    @media (max-width: 900px) {
-      main { grid-template-columns: 1fr; }
-      .login-panel { border-right: none; border-bottom: 1px solid var(--border); padding: 2rem; }
-      .edu-panel { max-height: none; }
+    @media (max-width: 860px) {
+      body.panel-open .login-panel { flex: 0 0 340px; }
+      body.panel-open .edu-panel  { width: calc(100vw - 340px); }
+      .edu-inner { min-width: 320px; }
     }
   </style>
 </head>
@@ -301,277 +331,272 @@
 
 <header>
   <div class="logo">
-    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <svg id="lockIcon" class="logo-icon" width="22" height="22" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+         title="SecureBank">
       <rect x="3" y="10" width="18" height="11" rx="2"/>
       <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
     </svg>
     SecureBank
   </div>
-  <div class="header-badge">DEMO EDUCACIONAL — SQL INJECTION</div>
+  <div class="header-right">
+    <span class="header-info">Agência 0001 &nbsp;|&nbsp; Seg–Sex 08h–20h</span>
+  </div>
 </header>
 
 <main>
-  <!-- ══ LEFT: LOGIN ══ -->
+  <!-- ══ LOGIN ══ -->
   <div class="login-panel">
     <div class="login-card">
       <h2>Acesso à conta</h2>
       <p class="sub">Digite suas credenciais para entrar no Internet Banking.</p>
 
       <label for="username">Usuário</label>
-      <input id="username" type="text" placeholder="ex: admin" autocomplete="off" spellcheck="false" />
+      <input id="username" type="text" placeholder="CPF ou nome de usuário"
+             autocomplete="off" spellcheck="false" />
 
       <label for="password">Senha</label>
-      <input id="password" type="text" placeholder="ex: senha123" autocomplete="off" spellcheck="false" />
+      <input id="password" type="password" placeholder="••••••••"
+             autocomplete="off" spellcheck="false" />
 
       <button class="btn" onclick="doLogin()">Entrar</button>
 
-      <div id="alert" class="alert"></div>
+      <div id="alertBox" class="alert"></div>
+
+      <div class="forgot" onclick="void(0)">Esqueci minha senha</div>
     </div>
   </div>
 
-  <!-- ══ RIGHT: EDUCATION ══ -->
-  <div class="edu-panel">
+  <!-- ══ PAINEL EDUCACIONAL (oculto por padrão) ══ -->
+  <div class="edu-panel" id="eduPanel">
+    <div class="edu-inner">
 
-    <!-- Query ao vivo -->
-    <h3>Query SQL gerada pelo servidor</h3>
-    <div class="query-box" id="queryBox">
-      <span class="kw">SELECT</span> * <span class="kw">FROM</span> users
-      <span class="kw">WHERE</span> username = <span class="str">''</span>
-      <span class="kw">AND</span> password = <span class="str">''</span>
-    </div>
+      <div class="edu-header">
+        <span class="edu-title">Painel — SQL Injection</span>
+        <button class="close-btn" onclick="togglePanel()">✕ Fechar</button>
+      </div>
 
-    <!-- Status -->
-    <div class="status-row">
-      <div class="dot" id="statusDot"></div>
-      <span id="statusText">Aguardando entrada...</span>
-    </div>
+      <h3>Query SQL gerada pelo servidor</h3>
+      <div class="query-box" id="queryBox"><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> username = <span class="str">''</span>
+<span class="kw">AND</span> password = <span class="str">''</span></div>
 
-    <!-- Explicação -->
-    <div class="explain" id="explainBox">
-      <div class="tag">Como funciona</div><br>
-      O servidor monta a query concatenando diretamente o input do usuário na string SQL.
-      <br><br>
-      <strong>Código vulnerável (PHP):</strong><br>
-      <code style="color:#a5f3fc">"SELECT * FROM users WHERE username='$user' AND password='$pass'"</code>
-      <br><br>
-      Ao inserir caracteres especiais como <strong style="color:#fbbf24">'</strong> ou <strong style="color:#fbbf24">--</strong>, o atacante consegue manipular a lógica da query.
-    </div>
+      <div class="status-row">
+        <div class="dot" id="statusDot"></div>
+        <span id="statusText">Aguardando entrada...</span>
+      </div>
 
-    <!-- Payloads prontos -->
-    <div class="payloads">
-      <h3>Payloads prontos — clique para usar</h3>
-      <div class="payload-list">
-        <div class="payload-item" onclick="applyPayload(`' OR '1'='1`, `' OR '1'='1`)">
-          <div>
-            <div class="payload-code">' OR '1'='1</div>
-            <div class="payload-desc">Torna a condição sempre verdadeira → retorna todos os usuários</div>
+      <div class="explain" id="explainBox">
+        <div class="tag">Como funciona</div><br>
+        O servidor monta a query concatenando diretamente o input do usuário na string SQL.<br><br>
+        <strong>Código vulnerável (PHP):</strong><br>
+        <code style="color:#a5f3fc">"SELECT * FROM users WHERE username='$user' AND password='$pass'"</code><br><br>
+        Insira caracteres como <strong style="color:#fbbf24">'</strong> ou <strong style="color:#fbbf24">--</strong> para manipular a lógica da query.
+      </div>
+
+      <div class="payloads">
+        <h3>Payloads prontos — clique para usar</h3>
+        <div class="payload-list">
+
+          <div class="payload-item" onclick="applyPayload(`' OR '1'='1`, `' OR '1'='1`)">
+            <div style="flex:1">
+              <div class="payload-code">' OR '1'='1</div>
+              <div class="payload-desc">Torna a condição sempre verdadeira → retorna todos os usuários</div>
+            </div>
+            <button class="use-btn">Usar</button>
           </div>
-          <button class="use-btn">Usar</button>
-        </div>
-        <div class="payload-item" onclick="applyPayload(`admin'--`, `qualquer_coisa`)">
-          <div>
-            <div class="payload-code">admin'--</div>
-            <div class="payload-desc">Comenta a verificação de senha → loga como admin sem senha</div>
+
+          <div class="payload-item" onclick="applyPayload(`admin'--`, `qualquer_coisa`)">
+            <div style="flex:1">
+              <div class="payload-code">admin'--</div>
+              <div class="payload-desc">Comenta a verificação de senha → loga como admin sem senha</div>
+            </div>
+            <button class="use-btn">Usar</button>
           </div>
-          <button class="use-btn">Usar</button>
-        </div>
-        <div class="payload-item" onclick="applyPayload(`' OR 1=1--`, `x`)">
-          <div>
-            <div class="payload-code">' OR 1=1--</div>
-            <div class="payload-desc">Variante numérica — bypassa autenticação por completo</div>
+
+          <div class="payload-item" onclick="applyPayload(`' OR 1=1--`, `x`)">
+            <div style="flex:1">
+              <div class="payload-code">' OR 1=1--</div>
+              <div class="payload-desc">Variante numérica — bypassa autenticação por completo</div>
+            </div>
+            <button class="use-btn">Usar</button>
           </div>
-          <button class="use-btn">Usar</button>
-        </div>
-        <div class="payload-item" onclick="applyPayload(`' UNION SELECT id,username,password,role,balance,email FROM users--`, `x`)">
-          <div>
-            <div class="payload-code">' UNION SELECT ... FROM users--</div>
-            <div class="payload-desc">UNION attack — extrai dados de outra tabela</div>
+
+          <div class="payload-item" onclick="applyPayload(`' UNION SELECT id,username,password,role,balance,email FROM users--`, `x`)">
+            <div style="flex:1">
+              <div class="payload-code">' UNION SELECT ... FROM users--</div>
+              <div class="payload-desc">UNION attack — extrai todos os dados da tabela</div>
+            </div>
+            <button class="use-btn">Usar</button>
           </div>
-          <button class="use-btn">Usar</button>
+
         </div>
       </div>
-    </div>
 
-    <!-- Dados vazados -->
-    <div class="leak-section" id="leakSection">
-      <h3>Dados vazados <span id="leakCount"></span></h3>
-      <table id="leakTable">
-        <thead>
-          <tr>
-            <th>ID</th><th>Usuário</th><th>Senha</th><th>Cargo</th><th>Saldo</th><th>E-mail</th>
-          </tr>
-        </thead>
-        <tbody id="leakBody"></tbody>
-      </table>
-    </div>
+      <div class="leak-section" id="leakSection">
+        <h3>Dados vazados <span class="badge" id="leakCount"></span></h3>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Usuário</th><th>Senha</th><th>Cargo</th><th>Saldo</th><th>E-mail</th></tr>
+          </thead>
+          <tbody id="leakBody"></tbody>
+        </table>
+      </div>
 
+    </div>
   </div>
 </main>
 
 <footer>
-  Site fictício criado para fins educacionais — estudo de SQL Injection &nbsp;|&nbsp; Nenhum dado real é processado
+  © 2024 SecureBank S.A. &nbsp;|&nbsp; CNPJ 00.000.000/0001-00 &nbsp;|&nbsp; Todos os direitos reservados
 </footer>
 
 <script>
-  // ── Banco de dados simulado ──
+  /* ── Banco simulado ── */
   const DB = [
-    { id: 1, username: 'admin',        password: 'Adm!n@2024',   role: 'Administrador', balance: 'R$ 1.250.000,00', email: 'admin@securebank.com' },
-    { id: 2, username: 'joao.silva',   password: 'joao456',      role: 'Cliente',       balance: 'R$ 3.420,50',     email: 'joao@email.com' },
-    { id: 3, username: 'maria.santos', password: 'Maria@123',    role: 'Cliente',       balance: 'R$ 15.890,00',    email: 'maria@email.com' },
-    { id: 4, username: 'carlos.dev',   password: 'dev2024!',     role: 'Desenvolvedor', balance: 'R$ 8.750,25',     email: 'carlos@securebank.com' },
-    { id: 5, username: 'suporte',      password: 'suporte999',   role: 'Suporte',       balance: 'R$ 0,00',         email: 'suporte@securebank.com' },
+    { id: 1, username: 'admin',        password: 'Adm!n@2024',  role: 'Administrador', balance: 'R$ 1.250.000,00', email: 'admin@securebank.com' },
+    { id: 2, username: 'joao.silva',   password: 'joao456',     role: 'Cliente',       balance: 'R$ 3.420,50',     email: 'joao@email.com' },
+    { id: 3, username: 'maria.santos', password: 'Maria@123',   role: 'Cliente',       balance: 'R$ 15.890,00',    email: 'maria@email.com' },
+    { id: 4, username: 'carlos.dev',   password: 'dev2024!',    role: 'Desenvolvedor', balance: 'R$ 8.750,25',     email: 'carlos@securebank.com' },
+    { id: 5, username: 'suporte',      password: 'suporte999',  role: 'Suporte',       balance: 'R$ 0,00',         email: 'suporte@securebank.com' },
   ];
 
-  const usernameEl = document.getElementById('username');
-  const passwordEl = document.getElementById('password');
-  const queryBox   = document.getElementById('queryBox');
-  const statusDot  = document.getElementById('statusDot');
-  const statusText = document.getElementById('statusText');
-  const explainBox = document.getElementById('explainBox');
-  const alertEl    = document.getElementById('alert');
+  const usernameEl  = document.getElementById('username');
+  const passwordEl  = document.getElementById('password');
+  const queryBox    = document.getElementById('queryBox');
+  const statusDot   = document.getElementById('statusDot');
+  const statusText  = document.getElementById('statusText');
+  const explainBox  = document.getElementById('explainBox');
+  const alertBox    = document.getElementById('alertBox');
   const leakSection = document.getElementById('leakSection');
-  const leakBody   = document.getElementById('leakBody');
-  const leakCount  = document.getElementById('leakCount');
+  const leakBody    = document.getElementById('leakBody');
+  const leakCount   = document.getElementById('leakCount');
 
-  // ── Atualiza query em tempo real ──
+  /* ── Toggle painel (ativado pelo logo) ── */
+  let clickCount = 0, clickTimer = null;
+  document.getElementById('lockIcon').addEventListener('click', () => {
+    clickCount++;
+    document.getElementById('lockIcon').classList.add('flash');
+    setTimeout(() => document.getElementById('lockIcon').classList.remove('flash'), 200);
+    clearTimeout(clickTimer);
+    if (clickCount >= 3) { clickCount = 0; togglePanel(); return; }
+    clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+  });
+
+  function togglePanel() {
+    document.body.classList.toggle('panel-open');
+    if (document.body.classList.contains('panel-open')) updateQuery();
+  }
+
+  /* ── Análise ── */
+  function analyzeQuery(u, p) {
+    const full = u + p;
+    if (/UNION\s+SELECT/i.test(u))                                  return { type: 'union',   label: 'UNION Attack' };
+    if (/'--/.test(u))                                              return { type: 'comment', label: "Comment Bypass (admin'--)" };
+    if (/OR\s+1\s*=\s*1/i.test(full))                              return { type: 'or1',     label: 'OR 1=1 Bypass' };
+    if (/OR\s+['"]?1['"]?\s*=\s*['"]?1['"]?/i.test(full))         return { type: 'or_true', label: "OR '1'='1'" };
+    if (u === '' && p === '')                                       return { type: 'empty',   label: '' };
+    return { type: 'normal', label: 'Normal' };
+  }
+
+  function escH(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function buildQueryHTML(u, p, a) {
+    const eu = escH(u), ep = escH(p);
+    if (a.type === 'normal' || a.type === 'empty')
+      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${eu}'</span>\n<span class="kw">AND</span> password = <span class="str">'${ep}'</span>`;
+    if (a.type === 'or_true')
+      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = '<span class="inj">${eu}</span>'\n<span class="kw">AND</span> password = '<span class="inj">${ep}</span>'`;
+    if (a.type === 'comment') {
+      const clean = eu.replace(/'--.*/,'');
+      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${clean}</span><span class="inj">'--</span>\n<span class="cmt">-- AND password = '...' (ignorado pelo banco)</span>`;
+    }
+    if (a.type === 'or1')
+      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">''</span> <span class="inj">OR 1=1</span>\n<span class="cmt">-- AND password = '...' (ignorado)</span>`;
+    if (a.type === 'union')
+      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> username = <span class="str">''</span>\n<span class="inj">UNION SELECT id,username,password,role,balance,email FROM users</span>\n<span class="cmt">-- (restante ignorado)</span>`;
+    return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${eu}'</span>\n<span class="kw">AND</span> password = <span class="str">'${ep}'</span>`;
+  }
+
   function updateQuery() {
-    const u = usernameEl.value;
-    const p = passwordEl.value;
-    const analysis = analyzeQuery(u, p);
+    const u = usernameEl.value, p = passwordEl.value;
+    const a = analyzeQuery(u, p);
+    queryBox.innerHTML = buildQueryHTML(u, p, a);
 
-    queryBox.innerHTML = buildQueryHTML(u, p, analysis);
-
-    // Status dot
     statusDot.className = 'dot';
     if (u === '' && p === '') {
       statusText.textContent = 'Aguardando entrada...';
-    } else if (analysis.type === 'normal') {
+    } else if (a.type === 'normal') {
       statusDot.className = 'dot green';
       statusText.textContent = 'Query legítima — sem injeção detectada';
     } else {
       statusDot.className = 'dot red';
-      statusText.textContent = `Injeção detectada! Tipo: ${analysis.label}`;
+      statusText.textContent = `Injeção detectada! Tipo: ${a.label}`;
     }
 
-    // Explicação dinâmica
-    updateExplanation(analysis);
-  }
-
-  function escHTML(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function buildQueryHTML(u, p, analysis) {
-    const esc_u = escHTML(u);
-    const esc_p = escHTML(p);
-
-    if (analysis.type === 'normal') {
-      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${esc_u}'</span>\n<span class="kw">AND</span> password = <span class="str">'${esc_p}'</span>`;
-    }
-
-    if (analysis.type === 'or_true') {
-      // mostra a parte injetada em amarelo
-      const parts_u = esc_u.split("'");
-      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'</span><span class="inj">${esc_u}</span><span class="str">'</span>\n<span class="kw">AND</span> password = <span class="str">'</span><span class="inj">${esc_p}</span><span class="str">'</span>`;
-    }
-
-    if (analysis.type === 'comment') {
-      const cleanUser = esc_u.replace(/'--.*/,'');
-      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${cleanUser}</span><span class="inj">'--</span> <span class="cmt">AND password = '...' (ignorado)</span>`;
-    }
-
-    if (analysis.type === 'or1') {
-      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">''</span> <span class="inj">OR 1=1</span><span class="cmt">-- AND password = '...' (ignorado)</span>`;
-    }
-
-    if (analysis.type === 'union') {
-      return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> username = <span class="str">''</span>\n<span class="inj">UNION SELECT id,username,password,role,balance,email FROM users</span><span class="cmt">-- (resto ignorado)</span>`;
-    }
-
-    return `<span class="kw">SELECT</span> * <span class="kw">FROM</span> users\n<span class="kw">WHERE</span> username = <span class="str">'${esc_u}'</span>\n<span class="kw">AND</span> password = <span class="str">'${esc_p}'</span>`;
-  }
-
-  function analyzeQuery(u, p) {
-    const full = u + p;
-    if (/UNION\s+SELECT/i.test(u)) return { type: 'union', label: 'UNION Attack' };
-    if (/'--/.test(u))             return { type: 'comment', label: "Comment Bypass (admin'--)" };
-    if (/OR\s+1\s*=\s*1/i.test(full)) return { type: 'or1', label: 'OR 1=1 Bypass' };
-    if (/OR\s+['"]?1['"]?\s*=\s*['"]?1['"]?/i.test(full)) return { type: 'or_true', label: "OR '1'='1'" };
-    if (u === '' && p === '') return { type: 'empty', label: '' };
-    return { type: 'normal', label: 'Normal' };
-  }
-
-  function updateExplanation(analysis) {
-    const tag = (t) => `<div class="tag">${t}</div><br>`;
-    if (analysis.type === 'comment') {
+    const tag = t => `<div class="tag">${t}</div><br>`;
+    if (a.type === 'comment')
       explainBox.innerHTML = tag('Comment Bypass') +
-        `O payload <strong style="color:#fbbf24">admin'--</strong> fecha a string do username com <strong>'</strong> e usa <strong>--</strong> para comentar o restante da query. Assim, a verificação da senha é completamente ignorada pelo banco de dados.`;
-    } else if (analysis.type === 'or_true') {
+        `O payload <strong style="color:#fbbf24">admin'--</strong> fecha a string com <strong>'</strong> e usa <strong>--</strong> para comentar tudo que vem depois. A verificação de senha é completamente ignorada pelo banco.`;
+    else if (a.type === 'or_true')
       explainBox.innerHTML = tag("OR '1'='1'") +
-        `O payload injeta a condição <strong style="color:#fbbf24">OR '1'='1'</strong> que é sempre verdadeira. O banco retorna <strong>todos os registros</strong> da tabela, pois a condição nunca é falsa. O atacante recebe o primeiro usuário (geralmente o admin).`;
-    } else if (analysis.type === 'or1') {
+        `A condição injetada <strong style="color:#fbbf24">OR '1'='1'</strong> é sempre verdadeira. O banco retorna <strong>todos os registros</strong> da tabela, independente de username ou senha.`;
+    else if (a.type === 'or1')
       explainBox.innerHTML = tag('OR 1=1 Bypass') +
-        `Semelhante ao anterior, mas com comparação numérica. <strong style="color:#fbbf24">OR 1=1</strong> é sempre verdadeiro, e o <strong>--</strong> comenta a verificação de senha. Retorna todos os usuários.`;
-    } else if (analysis.type === 'union') {
+        `<strong style="color:#fbbf24">OR 1=1</strong> é sempre verdadeiro. O <strong>--</strong> descarta a checagem de senha. Resultado: todos os usuários são retornados.`;
+    else if (a.type === 'union')
       explainBox.innerHTML = tag('UNION Attack') +
-        `O <strong style="color:#fbbf24">UNION SELECT</strong> une o resultado original com uma segunda query, permitindo extrair dados de qualquer tabela do banco. É um dos ataques mais perigosos pois pode vazar <strong>qualquer dado</strong>.`;
-    } else if (analysis.type === 'normal') {
+        `<strong style="color:#fbbf24">UNION SELECT</strong> une a query original com uma segunda consulta ao banco, extraindo dados de qualquer tabela. Um dos ataques mais graves — pode vazar qualquer informação.`;
+    else if (a.type === 'normal')
       explainBox.innerHTML = tag('Query Legítima') +
-        `Input sem caracteres de injeção. O banco executa a busca normalmente e retorna apenas o usuário que corresponde ao username <strong>E</strong> à senha fornecidos.`;
-    } else {
+        `Input sem caracteres de injeção. O banco retorna apenas o registro onde username <strong>E</strong> password correspondem exatamente ao informado.`;
+    else
       explainBox.innerHTML = tag('Como funciona') +
-        `O servidor monta a query concatenando diretamente o input na string SQL.<br><br>
-        <strong>Código vulnerável (PHP):</strong><br>
-        <code style="color:#a5f3fc">"SELECT * FROM users WHERE username='$user' AND password='$pass'"</code><br><br>
-        Insira caracteres como <strong style="color:#fbbf24">'</strong> ou <strong style="color:#fbbf24">--</strong> para manipular a query.`;
-    }
+        `O servidor monta a query concatenando o input do usuário diretamente na string SQL.<br><br>
+         <strong>Código vulnerável (PHP):</strong><br>
+         <code style="color:#a5f3fc">"SELECT * FROM users WHERE username='$user' AND password='$pass'"</code><br><br>
+         Insira caracteres como <strong style="color:#fbbf24">'</strong> ou <strong style="color:#fbbf24">--</strong> para manipular a lógica da query.`;
   }
 
-  // ── Simulação de execução ──
+  /* ── Execução simulada ── */
   function executeQuery(u, p) {
-    const analysis = analyzeQuery(u, p);
-
-    if (analysis.type === 'union') return DB;
-    if (analysis.type === 'or_true') return DB;
-    if (analysis.type === 'or1') return DB;
-    if (analysis.type === 'comment') {
-      const cleanUser = u.replace(/'--.*/, '').trim();
-      const found = DB.find(r => r.username === cleanUser);
+    const a = analyzeQuery(u, p);
+    if (a.type === 'union' || a.type === 'or_true' || a.type === 'or1') return DB;
+    if (a.type === 'comment') {
+      const clean = u.replace(/'--.*/, '').trim();
+      const found = DB.find(r => r.username === clean);
       return found ? [found] : [];
     }
-    // login normal
     return DB.filter(r => r.username === u && r.password === p);
   }
 
-  function showAlert(type, msg) {
-    alertEl.className = `alert ${type} show`;
-    alertEl.innerHTML = msg;
-  }
-
   function doLogin() {
-    const u = usernameEl.value;
-    const p = passwordEl.value;
+    const u = usernameEl.value, p = passwordEl.value;
     const results = executeQuery(u, p);
-
     leakSection.classList.remove('show');
     leakBody.innerHTML = '';
+    usernameEl.className = '';
+    passwordEl.className = '';
 
     if (results.length === 0) {
-      showAlert('error', '✖ Credenciais inválidas. Acesso negado.');
-      usernameEl.className = 'danger';
-      passwordEl.className = 'danger';
+      alertBox.className = 'alert error show';
+      alertBox.innerHTML = '✖ &nbsp;Usuário ou senha incorretos. Tente novamente.';
+      usernameEl.className = 'inp-danger';
+      passwordEl.className = 'inp-danger';
     } else {
-      const analysis = analyzeQuery(u, p);
-      if (analysis.type === 'normal') {
-        showAlert('success', `✔ Login realizado como <strong>${results[0].role}</strong>: ${results[0].username}`);
-        usernameEl.className = 'success';
-        passwordEl.className = 'success';
+      const a = analyzeQuery(u, p);
+      if (a.type === 'normal') {
+        alertBox.className = 'alert success show';
+        alertBox.innerHTML = `✔ &nbsp;Bem-vindo, <strong>${results[0].username}</strong>!`;
+        usernameEl.className = 'inp-success';
+        passwordEl.className = 'inp-success';
       } else {
-        showAlert('warning', `⚠ SQL Injection bem-sucedido! ${results.length} registro(s) vazado(s).`);
-        usernameEl.className = 'danger';
-        passwordEl.className = 'danger';
-
-        // mostra tabela de dados vazados
+        alertBox.className = 'alert warning show';
+        alertBox.innerHTML = `⚠ &nbsp;SQL Injection bem-sucedido — ${results.length} registro(s) obtido(s).`;
+        usernameEl.className = 'inp-danger';
+        passwordEl.className = 'inp-danger';
         leakCount.textContent = results.length;
         results.forEach(r => {
           const tr = document.createElement('tr');
@@ -588,13 +613,12 @@
     passwordEl.value = pass;
     usernameEl.className = '';
     passwordEl.className = '';
-    alertEl.className = 'alert';
+    alertBox.className = 'alert';
     leakSection.classList.remove('show');
     updateQuery();
     usernameEl.focus();
   }
 
-  // ── Listeners ──
   usernameEl.addEventListener('input', () => { usernameEl.className = ''; updateQuery(); });
   passwordEl.addEventListener('input', () => { passwordEl.className = ''; updateQuery(); });
   document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
