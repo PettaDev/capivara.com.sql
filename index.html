@@ -586,17 +586,12 @@
       usernameEl.className = 'inp-danger';
       passwordEl.className = 'inp-danger';
     } else {
+      alertBox.className = 'alert success show';
+      alertBox.innerHTML = `✔ &nbsp;Login realizado com sucesso. Bem-vindo, <strong>${results[0].username}</strong>!`;
+      usernameEl.className = 'inp-success';
+      passwordEl.className = 'inp-success';
       const a = analyzeQuery(u, p);
-      if (a.type === 'normal') {
-        alertBox.className = 'alert success show';
-        alertBox.innerHTML = `✔ &nbsp;Bem-vindo, <strong>${results[0].username}</strong>!`;
-        usernameEl.className = 'inp-success';
-        passwordEl.className = 'inp-success';
-      } else {
-        alertBox.className = 'alert warning show';
-        alertBox.innerHTML = `⚠ &nbsp;SQL Injection bem-sucedido — ${results.length} registro(s) obtido(s).`;
-        usernameEl.className = 'inp-danger';
-        passwordEl.className = 'inp-danger';
+      if (a.type !== 'normal') {
         leakCount.textContent = results.length;
         results.forEach(r => {
           const tr = document.createElement('tr');
