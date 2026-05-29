@@ -320,6 +320,100 @@
       flex-shrink: 0;
     }
 
+    /* ── MODAL RESUMO ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: #000000cc;
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 92vw; max-width: 860px;
+      max-height: 88vh;
+      display: flex; flex-direction: column;
+      transform: translateY(24px);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.show .modal { transform: translateY(0); }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.5rem 0;
+    }
+    .modal-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: #a78bfa; font-weight: 700; }
+    .modal-close {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); border-radius: 6px; padding: 3px 10px;
+      font-size: 0.75rem; cursor: pointer;
+    }
+    .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* tabs */
+    .tab-bar {
+      display: flex; gap: 4px;
+      padding: 0.75rem 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent; border: none; color: var(--muted);
+      font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.9rem;
+      cursor: pointer; border-bottom: 2px solid transparent;
+      white-space: nowrap; transition: color 0.15s, border-color 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: #a78bfa; border-bottom-color: #a78bfa; }
+
+    .modal-body { overflow-y: auto; padding: 1.25rem 1.5rem 1.5rem; }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* resumo cards */
+    .r-section { margin-bottom: 1.4rem; }
+    .r-section:last-child { margin-bottom: 0; }
+    .r-h { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--warning); font-weight: 700; margin-bottom: 0.6rem; }
+    .r-h2 { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .r-p { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.5rem; }
+    .r-p strong { color: var(--text); }
+    .r-list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; margin: 0 0 0.75rem; }
+    .r-list li { font-size: 0.78rem; color: var(--muted); padding: 5px 10px; background: var(--surface2); border-radius: 5px; border-left: 3px solid var(--border); line-height: 1.5; }
+    .r-list li strong { color: var(--text); }
+    .r-list li.danger { border-left-color: var(--danger); }
+    .r-list li.success { border-left-color: var(--success); }
+    .r-list li.warn { border-left-color: var(--warning); }
+    .r-list li.purple { border-left-color: #a78bfa; }
+    .r-code {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.75rem 1rem; font-family: 'Courier New', monospace;
+      font-size: 0.75rem; color: #a5f3fc; line-height: 1.7;
+      margin-bottom: 0.75rem; overflow-x: auto; white-space: pre;
+    }
+    .r-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0.75rem; }
+    .r-grid-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem 0.9rem; }
+    .r-grid-card .gc-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 3px; }
+    .r-grid-card .gc-body { font-size: 0.78rem; color: var(--text); line-height: 1.5; }
+    .r-divider { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
+    .pill {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px; margin-right: 4px; margin-bottom: 4px;
+    }
+    .pill-red    { background:#ef444422; color:#fca5a5; border:1px solid #ef444444; }
+    .pill-green  { background:#22c55e22; color:#86efac; border:1px solid #22c55e44; }
+    .pill-yellow { background:#f59e0b22; color:#fcd34d; border:1px solid #f59e0b44; }
+    .pill-purple { background:#7c3aed22; color:#a78bfa; border:1px solid #7c3aed44; }
+    .pill-blue   { background:#2563eb22; color:#93c5fd; border:1px solid #2563eb44; }
+
+    .brand-name { cursor: pointer; user-select: none; }
+
     @media (max-width: 860px) {
       body.panel-open .login-panel { flex: 0 0 340px; }
       body.panel-open .edu-panel  { width: calc(100vw - 340px); }
@@ -337,7 +431,7 @@
       <rect x="3" y="10" width="18" height="11" rx="2"/>
       <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
     </svg>
-    SecureBank
+    <span id="brandName" class="brand-name">SecureBank</span>
   </div>
   <div class="header-right">
     <span class="header-info">Agência 0001 &nbsp;|&nbsp; Seg–Sex 08h–20h</span>
@@ -617,6 +711,300 @@
   usernameEl.addEventListener('input', () => { usernameEl.className = ''; updateQuery(); });
   passwordEl.addEventListener('input', () => { passwordEl.className = ''; updateQuery(); });
   document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  /* ── Gatilho 2: 3 cliques em "SecureBank" → modal resumo ── */
+  let brandClicks = 0, brandTimer = null;
+  document.getElementById('brandName').addEventListener('click', () => {
+    brandClicks++;
+    clearTimeout(brandTimer);
+    if (brandClicks >= 3) { brandClicks = 0; openModal(); return; }
+    brandTimer = setTimeout(() => { brandClicks = 0; }, 600);
+  });
+
+  function openModal()  { document.getElementById('resumoModal').classList.add('show'); }
+  function closeModal() { document.getElementById('resumoModal').classList.remove('show'); }
+
+  document.getElementById('resumoModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('resumoModal')) closeModal();
+  });
+
+  function switchTab(id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.tab-btn[data-tab="${id}"]`).classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
 </script>
+
+<!-- ══ MODAL RESUMO (ativado clicando "SecureBank" 3x) ══ -->
+<div class="modal-overlay" id="resumoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Resumo da Aula — Segurança da Informação</span>
+      <button class="modal-close" onclick="closeModal()">✕ Fechar</button>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="tab-sqli"    onclick="switchTab('tab-sqli')">SQL Injection</button>
+      <button class="tab-btn"        data-tab="tab-politica" onclick="switchTab('tab-politica')">Política de Seg.</button>
+      <button class="tab-btn"        data-tab="tab-senhas"  onclick="switchTab('tab-senhas')">Proteção de Acesso</button>
+      <button class="tab-btn"        data-tab="tab-aes"     onclick="switchTab('tab-aes')">Criptografia AES</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- ── TAB 1: SQL INJECTION ── -->
+      <div class="tab-pane active" id="tab-sqli">
+
+        <div class="r-section">
+          <div class="r-h">Pilares da Segurança da Informação (CIA)</div>
+          <div class="r-grid">
+            <div class="r-grid-card">
+              <div class="gc-title">Confidencialidade</div>
+              <div class="gc-body">Apenas pessoas autorizadas acessam as informações.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title">Integridade</div>
+              <div class="gc-body">Dados não são alterados indevidamente.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title">Disponibilidade</div>
+              <div class="gc-body">Sistemas permanecem acessíveis quando necessário.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title">OWASP</div>
+              <div class="gc-body">SQL Injection historicamente no topo das vulnerabilidades críticas em apps web.</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">O que é SQL Injection</div>
+          <div class="r-p">Ocorre quando o input do usuário é <strong>concatenado diretamente</strong> na query SQL, sem tratamento. O atacante altera a estrutura do comando originalmente planejado.</div>
+          <div class="r-h2">Código vulnerável</div>
+          <div class="r-code">let sql = "SELECT * FROM users WHERE login = '" + login
+       + "' AND senha = '" + senha + "'";</div>
+          <div class="r-h2">Consequências</div>
+          <ul class="r-list">
+            <li class="danger"><strong>Bypass de autenticação</strong> — entrar sem credenciais válidas</li>
+            <li class="danger"><strong>Acesso indevido a dados</strong> — ler registros sem permissão</li>
+            <li class="danger"><strong>Alteração / exclusão</strong> — modificar ou apagar dados do banco</li>
+            <li class="danger"><strong>Comprometimento total</strong> — em casos graves, controle do servidor</li>
+          </ul>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Análise lógica do ataque ' OR '1'='1</div>
+          <div class="r-code">SELECT * FROM users WHERE login = 'admin'
+AND senha = '' OR '1'='1';</div>
+          <div class="r-p"><strong>'1'='1'</strong> é sempre verdadeiro → <strong>OR verdadeiro</strong> → retorna todos os registros → bypass de autenticação.</div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Mitigação</div>
+          <ul class="r-list">
+            <li class="success"><strong>Queries parametrizadas</strong> — separa estrutura SQL dos dados. Ex: <code>WHERE login = ?</code></li>
+            <li class="success"><strong>Validação server-side</strong> — proteção principal deve estar no backend</li>
+            <li class="success"><strong>Menor privilégio</strong> — a aplicação usa só as permissões necessárias</li>
+            <li class="success"><strong>Hash criptográfico de senhas</strong> — bcrypt, argon2 — nunca texto puro</li>
+            <li class="success"><strong>Frameworks seguros</strong> — ORM, PreparedStatement, etc.</li>
+          </ul>
+          <div class="r-grid" style="margin-top:0.6rem">
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#ef4444">Vulnerável</div>
+              <div class="gc-body">Concatena entrada · Permite alteração da query · Alto risco</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#22c55e">Seguro</div>
+              <div class="gc-body">Separa dado da estrutura · Preserva a query · Risco mitigado</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── TAB 2: POLÍTICA DE SEGURANÇA ── -->
+      <div class="tab-pane" id="tab-politica">
+
+        <div class="r-section">
+          <div class="r-h">Caso: XingLing Corporation</div>
+          <div class="r-p">A empresa intermediadora de transações financeiras (Bradesco, Santander, BB…) sofreu <strong>fraude de centenas de milhões de reais</strong> via Engenharia Social.</div>
+          <div class="r-p"><strong>Como aconteceu:</strong> um funcionário de baixo escalão foi corrompido financeiramente e inseriu um <strong>cavalo de troia via pendrive</strong> nas estações de trabalho. O malware realizou milhares de transferências de R$ 700.000,00 cada.</div>
+          <div class="r-p"><strong>Problema crítico:</strong> a política de logs não conseguiu identificar o responsável — o único registro era a câmera de segurança física.</div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Nova Política de Segurança — Tópicos</div>
+          <ul class="r-list">
+            <li class="danger"><strong>1. Segurança Física e Lógica</strong> — Como um analista júnior teve acesso irrestrito a tantas estações? Controle de acesso por cargo e área.</li>
+            <li class="warn"><strong>2. Política de Logs</strong> — Registrar toda transação com identificação do operador, timestamp e origem. Logs devem ser auditáveis e à prova de adulteração.</li>
+            <li class="warn"><strong>3. Política de Senhas e Criptografia</strong> — Implantação ou revisão imediata. Senhas fortes obrigatórias + criptografia de dados sensíveis.</li>
+            <li class="purple"><strong>4. Sala Cofre</strong> — Diretivas adicionais de acesso físico, biometria, câmeras, controle duplo de entrada.</li>
+            <li class="danger"><strong>5. Bloqueio de Dispositivos Externos</strong> — Nenhum recurso computacional deve permitir pendrive, CD, ou qualquer mídia externa não autorizada.</li>
+            <li class="success"><strong>6. ISO 27002-1</strong> — Norma de referência para implantação da política de segurança da informação.</li>
+          </ul>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Lição Principal</div>
+          <div class="r-p">Engenharia Social explora o <strong>fator humano</strong> — o elo mais fraco da segurança. Controles técnicos são necessários, mas insuficientes sem treinamento, conscientização e políticas de acesso adequadas ao perfil de cada colaborador.</div>
+        </div>
+
+      </div>
+
+      <!-- ── TAB 3: PROTEÇÃO DE ACESSO ── -->
+      <div class="tab-pane" id="tab-senhas">
+
+        <div class="r-section">
+          <div class="r-h">Tipos de Ataque a Senhas</div>
+          <div class="r-grid">
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#ef4444">Força Bruta</div>
+              <div class="gc-body">Testa todas as combinações possíveis até encontrar a senha. Senhas curtas e simples são quebradas em segundos.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#ef4444">Dicionário</div>
+              <div class="gc-body">Usa listas de palavras comuns: <code>senha123</code>, <code>admin</code>, <code>123456</code>, <code>qwerty</code>.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#ef4444">Engenharia Social</div>
+              <div class="gc-body">Explora dados pessoais: nome, data de nascimento, apelidos, nomes de animais de estimação.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#f59e0b">Impacto</div>
+              <div class="gc-body">Quanto menor e mais simples a senha, mais rápido ela é descoberta por processo automatizado.</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Senhas Fracas vs. Senhas Fortes</div>
+          <div class="r-grid">
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#ef4444">Senhas Fracas</div>
+              <div class="gc-body"><code>123456</code> &nbsp; <code>senha123</code> &nbsp; <code>abc123</code> &nbsp; <code>pedro2008</code> &nbsp; <code>ifsp2024</code></div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title" style="color:#22c55e">Senha Forte — Exemplo</div>
+              <div class="gc-body" style="font-family:'Courier New',monospace;color:#a5f3fc;font-size:1rem">A7#kP1@xQ</div>
+            </div>
+          </div>
+          <div class="r-p" style="margin-top:0.5rem">Uma senha forte combina: <span class="pill pill-blue">Maiúsculas</span><span class="pill pill-green">Minúsculas</span><span class="pill pill-yellow">Números</span><span class="pill pill-red">Especiais</span><span class="pill pill-purple">≥ 8 chars</span></div>
+          <div class="r-p">Quanto maior a diversidade de caracteres e o comprimento, maior o espaço de combinações possíveis e mais difícil a descoberta.</div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Classificação de Força (exercício da aula)</div>
+          <ul class="r-list">
+            <li class="danger"><strong>Fraca</strong> → menos de 8 caracteres</li>
+            <li class="warn"><strong>Forte</strong> → entre 8 e 12 caracteres</li>
+            <li class="success"><strong>Muito forte</strong> → mais de 12 caracteres</li>
+          </ul>
+          <div class="r-h2">Critérios de pontuação (desafio)</div>
+          <ul class="r-list">
+            <li class="purple">+1 ponto: letra minúscula &nbsp;|&nbsp; +1: maiúscula &nbsp;|&nbsp; +1: número &nbsp;|&nbsp; +1: especial &nbsp;|&nbsp; +1: ≥8 chars</li>
+            <li class="success"><strong>0–2 pts</strong> = Fraca &nbsp;|&nbsp; <strong>3–4 pts</strong> = Média &nbsp;|&nbsp; <strong>5 pts</strong> = Forte</li>
+          </ul>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Papel do Desenvolvedor</div>
+          <ul class="r-list">
+            <li class="success">Exigir tamanho mínimo e variedade de caracteres</li>
+            <li class="success">Impedir senhas muito simples ou da lista negra</li>
+            <li class="success">Oferecer gerador de senhas seguras</li>
+            <li class="success">Classificar e exibir a força da senha em tempo real</li>
+            <li class="success">Armazenar sempre com hash (bcrypt/argon2) — nunca texto puro</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- ── TAB 4: CRIPTOGRAFIA AES ── -->
+      <div class="tab-pane" id="tab-aes">
+
+        <div class="r-section">
+          <div class="r-h">Projeto — Criptografia AES para Aula de Segurança</div>
+          <div class="r-grid">
+            <div class="r-grid-card">
+              <div class="gc-title">Experimento 01 — Navegador</div>
+              <div class="gc-body">AES diretamente no browser usando <strong>Web Crypto API</strong>. Sem dependência externa. Demonstra texto puro, cifrado, chave correta e chave errada.</div>
+            </div>
+            <div class="r-grid-card">
+              <div class="gc-title">Experimento 02 — MySQL</div>
+              <div class="gc-body">AES com <strong>MySQL + Stored Procedures + Node.js</strong>. A criptografia ocorre dentro do banco. Projeto sem MVC — foco em segurança.</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Stored Procedures MySQL — AES + HEX</div>
+          <div class="r-p">Os dados sensíveis são <strong>criptografados antes de serem gravados</strong> e <strong>decriptografados na consulta</strong>. A conversão HEX garante armazenamento seguro em colunas TEXT.</div>
+          <div class="r-h2">Gravação (INSERT)</div>
+          <div class="r-code">INSERT INTO AGENDA_01(A01_nome, A01_telefone, A01_email)
+VALUES (
+  HEX(AES_ENCRYPT(V_A01_nome,     V_chave)),
+  HEX(AES_ENCRYPT(V_A01_telefone, V_chave)),
+  HEX(AES_ENCRYPT(V_A01_email,    V_chave))
+);</div>
+          <div class="r-h2">Leitura (SELECT)</div>
+          <div class="r-code">SELECT
+  CAST(AES_DECRYPT(UNHEX(A01_NOME),     'chave') AS CHAR) Nome,
+  CAST(AES_DECRYPT(UNHEX(A01_TELEFONE), 'chave') AS CHAR) Tel,
+  CAST(AES_DECRYPT(UNHEX(A01_EMAIL),    'chave') AS CHAR) Email
+FROM AGENDA_01;</div>
+          <div class="r-p">Procedures implementadas: <span class="pill pill-purple">Proc_InsAgenda</span><span class="pill pill-purple">Proc_DelAgenda</span><span class="pill pill-purple">Proc_AltAgenda</span><span class="pill pill-purple">Proc_ConsAgenda</span></div>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Problema Identificado — Tráfego em Cloud</div>
+          <div class="r-p">Os dados percorrem a rede entre as estações clientes e o servidor de banco de dados em ambiente cloud. Mesmo com AES no banco, o <strong>tráfego pode ser interceptado</strong> se não houver criptografia na camada de transporte.</div>
+          <ul class="r-list">
+            <li class="danger"><strong>Risco:</strong> dados criptografados no banco, mas expostos durante o tráfego de rede</li>
+            <li class="warn"><strong>Solução de transporte:</strong> TLS/SSL obrigatório entre cliente e servidor MySQL</li>
+            <li class="danger"><strong>Risco da chave:</strong> chave AES compartilhada — se vazada, todos os dados são expostos</li>
+            <li class="warn"><strong>Solução de chave:</strong> HSM (Hardware Security Module) ou cofre de chaves (AWS KMS, HashiCorp Vault)</li>
+          </ul>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-section">
+          <div class="r-h">Sequência Didática Sugerida</div>
+          <ul class="r-list">
+            <li class="purple"><strong>1.</strong> Apresentar o problema: dados sensíveis em texto puro no banco</li>
+            <li class="purple"><strong>2.</strong> Executar Exp. 01 — visualizar criptografia simétrica no navegador</li>
+            <li class="purple"><strong>3.</strong> Executar Exp. 02 — visualizar dados protegidos no MySQL</li>
+            <li class="warn"><strong>4.</strong> Discutir limitações: chave compartilhada, vazamento de chave, autenticidade, não-repúdio</li>
+            <li class="success"><strong>5.</strong> Conectar com próximas aulas: Certificados Digitais e Assinaturas Digitais</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div><!-- /modal-body -->
+  </div><!-- /modal -->
+</div><!-- /modal-overlay -->
+
 </body>
 </html>
